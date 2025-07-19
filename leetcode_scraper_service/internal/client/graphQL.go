@@ -7,29 +7,28 @@ import (
 	"github.com/machinebox/graphql"
 )
 
-type GraphQL[T any]struct {
+type GraphQL struct {
 	URL string  
 	Client *graphql.Client	
 }	
 
-func (g *GraphQL[T]) Initialise(URL string) {
+func (g *GraphQL) Initialise(URL string) {
 	g.URL = URL
 	g.Client = graphql.NewClient(URL) 
 }
 
-func (g *GraphQL[T]) Query(context context.Context, queryString string, variables map[string]any) (*T, error) {
-
+func (g * GraphQL) Query (context context.Context, queryString string, response *any, variables map[string]any) error {
 	request := graphql.NewRequest(queryString)	
 
 	for key, value := range variables {
 		request.Var(key, value)
 	}
 
-	var response T 
 	err := g.Client.Run(context, request, &response)
+
 	if err != nil {
-		return nil, fmt.Errorf("Error making GraphQL request: %v", err)
+		return fmt.Errorf("Error making GraphQL request: %v", err)
 	}
-	return &response, nil 
+	return nil 
 }
 

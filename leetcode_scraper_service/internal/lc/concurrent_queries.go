@@ -10,10 +10,12 @@ import (
 
 type QuestionData struct {
 	Slug string 
+	Description string 
 }
 
-func Get_Slugs() chan QuestionData {
 
+
+func Get_Slugs() chan QuestionData {
 	slugs := make(chan QuestionData)
 
 	client := client.GraphQL[SlugResponse]{}
@@ -41,7 +43,6 @@ func Get_Slugs() chan QuestionData {
 
 			questions := response.ProblemsetQuestionList.Questions
 			for _, question := range questions {
-				fmt.Println(question.TitleSlug)
 				slugs <- QuestionData{
 					Slug: question.TitleSlug,
 				}
@@ -58,3 +59,17 @@ func Get_Slugs() chan QuestionData {
 
 	return slugs 
 } 
+
+func Get_Problem_Description(slugs chan QuestionData) chan QuestionData {
+	descriptions := make(chan QuestionData)	
+
+	client := 
+
+	go func(){
+		defer close(descriptions)
+
+		for slug := range slugs {
+
+		}
+	}
+}

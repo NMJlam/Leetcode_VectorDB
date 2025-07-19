@@ -5,7 +5,7 @@ package lc
 Slugs: names of the leetcode questions 
 --------------------------------------------
 */
-var SlugQuery = `
+const SlugQuery = `
 	query problemsetQuestionList($limit: Int, $skip: Int) {
 		problemsetQuestionList: problemsetQuestionListV2(
 			categorySlug: ""
@@ -32,3 +32,49 @@ type SlugResponse struct {
 			} `json:"questions"`
 		} `json:"problemsetQuestionList"`
 	}
+/*
+--------------------------------------------
+Question Descriptions: Problem Descriptions  
+--------------------------------------------
+*/
+const DescriptionQuery = `query questionData($titleSlug: String!) {
+  question(titleSlug: $titleSlug) {
+    questionId
+    content 
+    difficulty
+    similarQuestions
+    codeSnippets {
+        lang 
+        langSlug
+        code
+    }
+    solution {
+        canSeeDetail
+        paidOnly
+        hasVideoSolution
+        paidOnlyVideo
+    }
+  }
+}
+`
+
+type DescriptionResponse struct {
+    Question struct {
+        QuestionID       string `json:"questionId"`
+        Content          string `json:"content"`
+        Difficulty       string `json:"difficulty"`
+        SimilarQuestions string `json:"similarQuestions"`
+        CodeSnippets     []struct {
+            Lang     string `json:"lang"`
+            LangSlug string `json:"langSlug"`
+            Code     string `json:"code"`
+        } `json:"codeSnippets"`
+        Solution struct {
+            CanSeeDetail     bool `json:"canSeeDetail"`
+            PaidOnly         bool `json:"paidOnly"`
+            HasVideoSolution bool `json:"hasVideoSolution"`
+            PaidOnlyVideo    bool `json:"paidOnlyVideo"`
+        } `json:"solution"`
+    } `json:"question"`
+}
+
