@@ -8,7 +8,8 @@ import (
 
 
 func main() {
-	slug_channel := lc.Get_Slugs()
+	client := lc.CreateLeetcodeScraper()
+	slug_channel := client.Get_Slugs()
 
 	for slug := range slug_channel {
 		fmt.Println(slug.Slug)

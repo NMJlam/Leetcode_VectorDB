@@ -2,7 +2,6 @@ package lc
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/lamned/leetcode-scraper-service/internal/client"
@@ -13,13 +12,20 @@ type QuestionData struct {
 	Description string 
 }
 
+type Client struct {
+	Client client.GraphQL
+}
 
+func CreateLeetcodeScraper() *Client {
+	graphqlClient := client.GraphQL{}
+	graphqlClient.Initialise("https://leetcode.com/graphql")
+	return &Client {
+		Client: graphqlClient, 
+	}
+}
 
-func Get_Slugs() chan QuestionData {
+func (lc *Client) Get_Slugs() chan QuestionData {
 	slugs := make(chan QuestionData)
-
-	client := client.GraphQL[SlugResponse]{}
-	client.Initialise("https://leetcode.com/graphql")
 
 	limit := 50 
 	skip := 0  
@@ -33,8 +39,10 @@ func Get_Slugs() chan QuestionData {
 		defer close(slugs)
 
 		for {
-			response, err := client.Query(context.Background(), 
-										SlugQuery, 
+			response := SlugResponse{}
+			err := lc.Client.Query(context.Background(), 
+										SlugQuery,
+										&response, 
 										variables)
 
 			if err != nil {
@@ -60,16 +68,3 @@ func Get_Slugs() chan QuestionData {
 	return slugs 
 } 
 
-func Get_Problem_Description(slugs chan QuestionData) chan QuestionData {
-	descriptions := make(chan QuestionData)	
-
-	client := 
-
-	go func(){
-		defer close(descriptions)
-
-		for slug := range slugs {
-
-		}
-	}
-}
